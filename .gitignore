@@ -21,6 +21,8 @@ dist/
 
 # ignore codec builds
 codecs/**/build/
+codecs/blosc/cmake/
+
 # pixi environments
 .pixi
 *.egg-info
