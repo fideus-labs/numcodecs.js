@@ -10,7 +10,7 @@ CODEC_VERSION="v1.21.6"
 BLOSC_DIR="$ROOT_DIR/c-blosc"
 BUILD_DIR="$BLOSC_DIR/build"
 
-export OPTIMIZE="-Os -flto"
+export OPTIMIZE="-Os -flto -msimd128"
 export LDFLAGS=$OPTIMIZE
 export CFLAGS=$OPTIMIZE
 export CPPFLAGS=$OPTIMIZE
@@ -40,8 +40,6 @@ cd $BUILD_DIR
     -DBUILD_FUZZERS=0 \
     -DBUILD_SHARED=0 \
     -DBUILD_TESTS=0 \
-    -DDEACTIVATE_AVX2=1 \
-    -DDEACTIVATE_SSE2=1 \
     ../
 )
 
