@@ -5,7 +5,7 @@ ROOT_DIR="node_modules"
 rm -rf $ROOT_DIR
 
 CODEC_URL="https://github.com/lz4/lz4"
-CODEC_VERSION="v1.9.2"
+CODEC_VERSION="v1.10.0"
 
 CODEC_DIR="$ROOT_DIR/lz4"
 
@@ -25,31 +25,38 @@ echo "============================================="
 echo "Compiling lz4"
 echo "============================================="
 
-cd $CODEC_DIR
-emmake make
+# Build only the static library (not programs/tests), in parallel.
+emmake make -C $CODEC_DIR/lib -j
 
 echo "============================================="
 echo "Compiling wasm bindings"
 echo "============================================="
 
-cd ../../
+# Pure C bindings — no embind, no C++.
+#
+# EXPORTED_FUNCTIONS: low-level C functions + malloc/free for the JS wrapper.
+# EXPORTED_RUNTIME_METHODS: HEAPU8/HEAP32 for direct heap access from the
+#                           JS wrapper.
+# --post-js: injects high-level compress/decompress/free_result wrappers onto
+#            the Module object, preserving the same TypeScript interface.
+#
+# See https://emscripten.org/docs/tools_reference/settings_reference.html
 (
-  emcc lz4_codec.cpp \
+  emcc lz4_codec.c \
     ${OPTIMIZE} \
-    -I "$CODEC_DIR/lib" \
     --closure 1 \
-    --bind \
+    --post-js post.js \
+    -s EXPORTED_FUNCTIONS='["_get_input_buf","_do_compress","_do_decompress","_free_result","_malloc","_free"]' \
+    -s EXPORTED_RUNTIME_METHODS='["HEAPU8","HEAP32"]' \
     -s ALLOW_MEMORY_GROWTH=1 \
     -s MODULARIZE=1 \
     -s EXPORT_ES6=1 \
-    -s USE_ES6_IMPORT_META=0 \
-    -s ENVIRONMENT="webview" \
+    -s ENVIRONMENT="web" \
     -s MALLOC=emmalloc \
     -s EXPORT_NAME="lz4_codec" \
-    -x c++ \
-    --std=c++17 \
+    -I "$CODEC_DIR/lib" \
     -llz4 \
-    -L $CODEC_DIR/lib \
+    -L "$CODEC_DIR/lib" \
     -o "lz4_codec.js"
 )
 
