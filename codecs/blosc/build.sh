@@ -44,7 +44,7 @@ cd $BUILD_DIR
     ../
 )
 
-cmake --build .
+cmake --build . --parallel
 
 echo "============================================="
 echo "Compiling wasm bindings"
