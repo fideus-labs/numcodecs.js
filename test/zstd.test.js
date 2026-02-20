@@ -29,8 +29,8 @@ test('Ensure all equal', async t => {
 });
 
 test('Invalid compressor options', t => {
-  t.throws(() => new LZ4(1.33));
-  t.throws(() => new LZ4(-2.3));
+  t.throws(() => new Zstd(1.33));
+  t.throws(() => new Zstd(-2.3));
 });
 
 test('Static constructor', async t => {
