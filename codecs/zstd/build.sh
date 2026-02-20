@@ -10,7 +10,7 @@ CODEC_VERSION="v1.5.7"
 CODEC_DIR="$ROOT_DIR/zstd"
 BUILD_DIR="$CODEC_DIR/build"
 
-export OPTIMIZE="-Os -flto"
+export OPTIMIZE="-O3 -flto -msimd128"
 export LDFLAGS=$OPTIMIZE
 export CFLAGS="$OPTIMIZE -DNDEBUG=1"
 export CPPFLAGS=$OPTIMIZE

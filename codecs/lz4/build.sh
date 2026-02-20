@@ -9,7 +9,7 @@ CODEC_VERSION="v1.10.0"
 
 CODEC_DIR="$ROOT_DIR/lz4"
 
-export OPTIMIZE="-Os -flto"
+export OPTIMIZE="-Os -flto -msimd128"
 export LDFLAGS=$OPTIMIZE
 export CFLAGS=$OPTIMIZE
 export CPPFLAGS=$OPTIMIZE
