@@ -5,7 +5,7 @@ ROOT_DIR="node_modules"
 rm -rf $ROOT_DIR
 
 CODEC_URL="https://github.com/Blosc/c-blosc"
-CODEC_VERSION="v1.18.1"
+CODEC_VERSION="v1.21.6"
 
 BLOSC_DIR="$ROOT_DIR/c-blosc"
 BUILD_DIR="$BLOSC_DIR/build"
@@ -23,7 +23,7 @@ mkdir -p $BLOSC_DIR
 curl -L "$CODEC_URL/archive/$CODEC_VERSION.tar.gz" | tar -xzf - --strip 1 -C $BLOSC_DIR
 # Add missing headers in vendored zlib.
 for file in "gzlib.c" "gzread.c" "gzwrite.c"; do \
-  sed -i "1s/^/#include <unistd.h>/" "$BLOSC_DIR/internal-complibs/zlib-1.2.8/$file" ; \
+  sed -i "1s/^/#include <unistd.h>/" "$BLOSC_DIR/internal-complibs/zlib-1.3.1/$file" ; \
 done
 
 echo "============================================="
@@ -37,6 +37,7 @@ cd $BUILD_DIR
   emcmake cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_BENCHMARKS=0 \
+    -DBUILD_FUZZERS=0 \
     -DBUILD_SHARED=0 \
     -DBUILD_TESTS=0 \
     -DDEACTIVATE_AVX2=1 \
