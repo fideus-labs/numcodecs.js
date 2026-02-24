@@ -42,7 +42,6 @@ const LZ4: CodecConstructor<LZ4Config> = class LZ4 implements Codec {
     const module = await emscriptenModule;
     const view = module.compress(data, this.acceleration);
     const result = new Uint8Array(view); // Copy view and free wasm memory
-    module.free_result();
     return result;
   }
 
@@ -58,7 +57,6 @@ const LZ4: CodecConstructor<LZ4Config> = class LZ4 implements Codec {
     const module = await emscriptenModule;
     const view = module.decompress(data);
     const result = new Uint8Array(view); // Copy view and free wasm memory
-    module.free_result();
     if (out !== undefined) {
       out.set(result);
       return out;

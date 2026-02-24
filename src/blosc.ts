@@ -71,7 +71,6 @@ const Blosc: CodecConstructor<BloscConfig> = class Blosc implements Codec {
     const module = await emscriptenModule;
     const view = module.compress(data, this.cname, this.clevel, this.shuffle, this.blocksize);
     const result = new Uint8Array(view); // Copy view and free wasm memory
-    module.free_result();
     return result;
   }
 
@@ -82,7 +81,6 @@ const Blosc: CodecConstructor<BloscConfig> = class Blosc implements Codec {
     const module = await emscriptenModule;
     const view = module.decompress(data);
     const result = new Uint8Array(view); // Copy view and free wasm memory
-    module.free_result();
     if (out !== undefined) {
       out.set(result);
       return out;

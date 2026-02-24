@@ -43,7 +43,6 @@ const Zstd: CodecConstructor<ZstdConfig> = class Zstd implements Codec {
     const module = await emscriptenModule;
     const view = module.compress(data, level);
     const result = new Uint8Array(view); // Copy view and free wasm memory
-    module.free_result();
     return result;
   }
 
@@ -54,7 +53,6 @@ const Zstd: CodecConstructor<ZstdConfig> = class Zstd implements Codec {
     const module = await emscriptenModule;
     const view = module.decompress(data);
     const result = new Uint8Array(view); // Copy view and free wasm memory
-    module.free_result();
     if (out !== undefined) {
       out.set(result);
       return out;

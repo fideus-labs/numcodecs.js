@@ -32,23 +32,38 @@ static size_t   output_cap = 0;
 /* Static error message buffer. Empty string means no error. */
 static char error_msg[256] = "";
 
-/* Ensure input buffer has at least `size` bytes. Returns pointer. */
+/* Ensure input buffer has at least `size` bytes. Returns pointer.
+   Uses realloc so the allocator can extend in-place when possible,
+   avoiding heap fragmentation and unnecessary memory.grow() calls. */
 EMSCRIPTEN_KEEPALIVE
 uint8_t *get_input_buf(size_t size) {
 	if (size > input_cap) {
-		free(input_buf);
-		input_buf = (uint8_t *)malloc(size);
-		input_cap = input_buf ? size : 0;
+		uint8_t *p = (uint8_t *)realloc(input_buf, size);
+		if (p) {
+			input_buf = p;
+			input_cap = size;
+		} else {
+			free(input_buf);
+			input_buf = NULL;
+			input_cap = 0;
+		}
 	}
 	return input_buf;
 }
 
-/* Ensure output buffer has at least `size` bytes. Returns pointer. */
+/* Ensure output buffer has at least `size` bytes. Returns pointer.
+   Uses realloc so the allocator can extend in-place when possible. */
 static uint8_t *ensure_output(size_t size) {
 	if (size > output_cap) {
-		free(output_buf);
-		output_buf = (uint8_t *)malloc(size);
-		output_cap = output_buf ? size : 0;
+		uint8_t *p = (uint8_t *)realloc(output_buf, size);
+		if (p) {
+			output_buf = p;
+			output_cap = size;
+		} else {
+			free(output_buf);
+			output_buf = NULL;
+			output_cap = 0;
+		}
 	}
 	return output_buf;
 }
