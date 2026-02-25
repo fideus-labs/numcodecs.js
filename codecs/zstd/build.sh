@@ -75,7 +75,7 @@ cd ../../../
     -s ENVIRONMENT="web" \
     -s MALLOC=emmalloc \
     -s FILESYSTEM=0 \
-    -s INITIAL_MEMORY=2097152 \
+    -s INITIAL_MEMORY=4194304 \
     -s EXPORT_NAME="zstd_codec" \
     -I "$CODEC_DIR/lib" \
     -lzstd \

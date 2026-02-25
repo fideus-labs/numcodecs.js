@@ -151,7 +151,7 @@ cd ../../../
     -s ENVIRONMENT="web" \
     -s MALLOC=emmalloc \
     -s FILESYSTEM=0 \
-    -s INITIAL_MEMORY=2097152 \
+    -s INITIAL_MEMORY=4194304 \
     -s STACK_SIZE=262144 \
     -s EXPORT_NAME="blosc_codec" \
     -I "$BLOSC_DIR/blosc" \
