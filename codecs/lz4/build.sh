@@ -9,7 +9,7 @@ CODEC_VERSION="v1.10.0"
 
 CODEC_DIR="$ROOT_DIR/lz4"
 
-export OPTIMIZE="-Os -flto -msimd128"
+export OPTIMIZE="-O3 -flto -msimd128"
 export LDFLAGS=$OPTIMIZE
 export CFLAGS=$OPTIMIZE
 export CPPFLAGS=$OPTIMIZE
@@ -44,6 +44,7 @@ echo "============================================="
 (
   emcc lz4_codec.c \
     ${OPTIMIZE} \
+    -DNDEBUG=1 \
     --closure 1 \
     --post-js post.js \
     -s EXPORTED_FUNCTIONS='["_get_input_buf","_do_compress","_do_decompress","_free_result","_malloc","_free"]' \
@@ -53,6 +54,8 @@ echo "============================================="
     -s EXPORT_ES6=1 \
     -s ENVIRONMENT="web" \
     -s MALLOC=emmalloc \
+    -s FILESYSTEM=0 \
+    -s INITIAL_MEMORY=2097152 \
     -s EXPORT_NAME="lz4_codec" \
     -I "$CODEC_DIR/lib" \
     -llz4 \

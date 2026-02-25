@@ -14,7 +14,7 @@ BLOSC_DIR="$ROOT_DIR/c-blosc"
 BUILD_DIR="$BLOSC_DIR/build"
 SNAPPY_DIR="$ROOT_DIR/snappy-c"
 
-export OPTIMIZE="-Os -msimd128"
+export OPTIMIZE="-O3 -flto -msimd128"
 export LDFLAGS=$OPTIMIZE
 export CFLAGS=$OPTIMIZE
 export CPPFLAGS=$OPTIMIZE
@@ -139,7 +139,8 @@ cd ../../../
 # See https://emscripten.org/docs/tools_reference/settings_reference.html
 (
   emcc blosc_codec.c \
-    -Os -msimd128 \
+    ${OPTIMIZE} \
+    -DNDEBUG=1 \
     --closure 1 \
     --post-js post.js \
     -s EXPORTED_FUNCTIONS='["_get_input_buf","_do_compress","_do_decompress","_free_result","_malloc","_free"]' \
@@ -148,7 +149,9 @@ cd ../../../
     -s MODULARIZE=1 \
     -s EXPORT_ES6=1 \
     -s ENVIRONMENT="web" \
-    -s MALLOC=dlmalloc \
+    -s MALLOC=emmalloc \
+    -s FILESYSTEM=0 \
+    -s INITIAL_MEMORY=2097152 \
     -s STACK_SIZE=262144 \
     -s EXPORT_NAME="blosc_codec" \
     -I "$BLOSC_DIR/blosc" \

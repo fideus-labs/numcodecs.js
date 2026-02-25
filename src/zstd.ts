@@ -52,12 +52,11 @@ const Zstd: CodecConstructor<ZstdConfig> = class Zstd implements Codec {
     }
     const module = await emscriptenModule;
     const view = module.decompress(data);
-    const result = new Uint8Array(view); // Copy view and free wasm memory
     if (out !== undefined) {
-      out.set(result);
+      out.set(view); // Copy directly from wasm view into caller's buffer
       return out;
     }
-    return result;
+    return new Uint8Array(view); // Copy view before wasm memory can be reused
   }
 };
 
